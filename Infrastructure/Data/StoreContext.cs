@@ -3,7 +3,7 @@ using Core.Entities;
 using Infrastructure.Config;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Infrastructure.Data;
 
 public class StoreContext(DbContextOptions options) : DbContext(options)
 {
