@@ -1,0 +1,12 @@
+@use '@angular/material' as mat;
+
+// Customize the entire app. Change :root to your selector if you want to scope the styles.
+:root {
+  @include mat.button-overrides((
+    filled-container-shape: '6px',
+    outlined-container-shape: '6px'
+  ));
+  @include mat.badge-overrides((
+    background-color: blue
+  ));
+}
