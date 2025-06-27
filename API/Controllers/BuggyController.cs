@@ -1,6 +1,4 @@
-using System;
 using API.DTOs;
-using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
