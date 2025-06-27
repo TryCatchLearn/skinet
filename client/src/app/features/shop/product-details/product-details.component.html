@@ -1,0 +1,43 @@
+@if (product) {
+<section class="py-8">
+    <div class="max-w-screen-2xl px-4 mx-auto">
+        <div class="grid grid-cols-2 gap-8">
+            <div class="max-w-xl mx-auto">
+                <img class="w-full" src="{{product.pictureUrl}}"
+                    alt="product image" />
+            </div>
+
+            <div class="mt-6 sm:mt-8 lg:mt-0">
+                <h1 class="text-2xl font-semibold text-gray-900">
+                    {{product.name}}
+                </h1>
+                <div class="mt-4 items-center gap-4 flex">
+                    <p class="text-3xl font-extrabold text-gray-900">
+                        {{product.price | currency}}
+                    </p>
+                </div>
+
+                <div class="flex gap-4 mt-6">
+                    <button mat-flat-button class="match-input-height">
+                        <mat-icon>shopping_cart</mat-icon>
+                        Add to cart
+                    </button>
+
+                    <mat-form-field appearance="outline" class="flex flex-row">
+                        <mat-label>Quantity</mat-label>
+                        <input matInput type="number">
+                    </mat-form-field>
+                </div>
+
+                <mat-divider class="my-6"></mat-divider>
+
+                <p class="mt-6 text-gray-500">
+                    {{product.description}}
+                </p>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+}
