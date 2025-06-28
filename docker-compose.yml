@@ -7,3 +7,14 @@ services:
     platform: "linux/amd64"
     ports:
       - "1433:1433"
+    volumes:
+      - sql-data:/var/opt/mssql
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+volumes:
+  sql-data:
+  redis-data:
