@@ -5,8 +5,8 @@
       <h2 class="text-sm font-semibold uppercase">{{product.name}}</h2>
       <p class="font-light">{{product.price | currency}}</p>
     </mat-card-content>
-    <mat-card-actions>
-      <button mat-stroked-button class="w-full">
+    <mat-card-actions (click)="$event.stopPropagation()">
+      <button mat-stroked-button class="w-full" (click)="cartService.addItemToCart(product)">
         <mat-icon>add_shopping_cart</mat-icon>
         Add to cart
       </button>
