@@ -1,19 +1,19 @@
 <section>
-    @if (cartService.cart()?.items?.length! > 0) {
-    <div class="mx-auto max-w-screen-xl">
-      <div class="flex w-full items-start gap-6 mt-32">
-        <div class="w-3/4">
-          @for (item of cartService.cart()?.items; track item.productId) {
-            <app-cart-item [item]="item"></app-cart-item>
-          }
-        </div>
-        <div class="w-1/4">
-          <app-order-summary></app-order-summary>
-        </div>
-      </div>
-    </div>
-    } @else {
-      <app-empty-state></app-empty-state>
-    }
+  @if (cartService.cart()?.items?.length! > 0) {
 
-  </section>
+  <div class="flex w-full items-start gap-6 mt-32">
+    <div class="w-3/4">
+      @for (item of cartService.cart()?.items; track item.productId) {
+      <app-cart-item [item]="item"></app-cart-item>
+      }
+    </div>
+    <div class="w-1/4">
+      <app-order-summary></app-order-summary>
+    </div>
+  </div>
+
+  } @else {
+  <app-empty-state></app-empty-state>
+  }
+
+</section>
