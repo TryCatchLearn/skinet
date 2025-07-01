@@ -1,0 +1,20 @@
+<div class="p-4">
+    <h2 class="text-lg font-semibold mb-4">{{ data.title }}</h2>
+    <p class="mb-4">{{ data.message }}</p>
+    <div class="flex justify-end space-x-2">
+      <button
+        mat-stroked-button
+        color="warn"
+        (click)="onCancel()"
+      >
+        Cancel
+      </button>
+      <button
+        mat-flat-button
+        (click)="onConfirm()"
+      >
+        Confirm
+      </button>
+    </div>
+  </div>
+

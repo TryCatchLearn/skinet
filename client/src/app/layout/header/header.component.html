@@ -7,6 +7,7 @@
           [routerLinkActiveOptions]="{exact: true}">Home</a>
       <a routerLink="/shop" routerLinkActive="active">Shop</a>
       <a routerLink="/test-error" routerLinkActive="active">Errors</a>
+      <a *appIsAdmin routerLink="/admin" routerLinkActive="active">Admin</a>
     </nav>
     <div class="flex gap-3 align-middle">
       <a matBadge="{{cartService.itemCount()}}" routerLink="/cart"
