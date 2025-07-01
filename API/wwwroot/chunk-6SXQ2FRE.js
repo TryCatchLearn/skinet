@@ -1,0 +1,1 @@
+import{f as t,g as m}from"./chunk-SP3SSILU.js";import"./chunk-MIKQGBUF.js";import"./chunk-HJYZM75B.js";import{a as o}from"./chunk-NEILRAN2.js";import"./chunk-YYNGFOZ2.js";import"./chunk-76XFCVV7.js";var i=[{path:"admin",component:t,canActivate:[o,m]}];export{i as adminRoutes};
