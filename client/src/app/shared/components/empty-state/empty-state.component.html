@@ -1,9 +1,13 @@
+@if (busyService.busyRequestCount === 0) {
 <div class="max-w-screen-xl mx-auto mt-32 px-10 py-4 bg-white rounded-lg shadow-md w-full">
     <div class="flex flex-col items-center justify-center py-12 w-full">
-        <mat-icon class="icon-display mb-8">shopping_cart</mat-icon>
+        <mat-icon class="icon-display mb-8">{{icon()}}</mat-icon>
         <p class="text-gray-600 text-lg font-semibold mb-4">
-            Your shopping cart is empty
+            {{message()}}
         </p>
-        <button routerLink="/shop" mat-flat-button>Go shopping!</button>
+        <button (click)="onAction()" mat-flat-button>{{actionText()}}</button>
     </div>
 </div>
+}
+
+
