@@ -12,32 +12,33 @@ public class CouponService : ICouponService
     {
         StripeConfiguration.ApiKey = config["StripeSettings:SecretKey"];
     }
-    
+
     public async Task<AppCoupon?> GetCouponFromPromoCode(string code)
     {
         var promotionService = new PromotionCodeService();
 
         var options = new PromotionCodeListOptions
         {
-            Code = code
+            Code = code,
+            Expand = ["data.promotion.coupon"]
         };
 
         var promotionCodes = await promotionService.ListAsync(options);
 
         var promotionCode = promotionCodes.FirstOrDefault();
 
-        if (promotionCode != null && promotionCode.Coupon != null)
-        {
-            return new AppCoupon
-            {
-                Name = promotionCode.Coupon.Name,
-                AmountOff = promotionCode.Coupon.AmountOff,
-                PercentOff = promotionCode.Coupon.PercentOff,
-                CouponId = promotionCode.Coupon.Id,
-                PromotionCode = promotionCode.Code
-            };
-        }
+        if (promotionCode?.Promotion.Coupon == null) return null;
 
-        return null;
+        var coupon = promotionCode.Promotion.Coupon;
+
+        return new AppCoupon
+        {
+            Name = coupon.Name,
+            AmountOff = coupon.AmountOff,
+            PercentOff = coupon.PercentOff,
+            CouponId = coupon.Id,
+            PromotionCode = promotionCode.Code
+        };
+
     }
 }

@@ -17,7 +17,7 @@ namespace Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.6")
+                .HasAnnotation("ProductVersion", "10.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -294,12 +294,14 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = "admin-id",
+                            ConcurrencyStamp = "admin",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "customer-id",
+                            ConcurrencyStamp = "customer",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         });
