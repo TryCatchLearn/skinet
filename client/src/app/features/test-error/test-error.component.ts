@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { environment } from '../../../environments/environment';
 
@@ -14,7 +14,7 @@ import { environment } from '../../../environments/environment';
 export class TestErrorComponent {
   private http = inject(HttpClient);
   baseUrl = environment.baseUrl;
-  validationErrors?: string[];
+  validationErrors = signal<string[] | undefined>(undefined);
 
   get404Error() {
     this.http.get(this.baseUrl + 'buggy/notfound').subscribe({
@@ -47,7 +47,7 @@ export class TestErrorComponent {
   get400ValidationError() {
     this.http.post(this.baseUrl + 'buggy/validationerror', {}).subscribe({
       next: response => console.log(response),
-      error: error => this.validationErrors = error
+      error: error => this.validationErrors.set(error)
     });
   }
 }

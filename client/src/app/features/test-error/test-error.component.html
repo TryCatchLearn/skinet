@@ -6,7 +6,7 @@
   <button (click)="get400ValidationError()" mat-stroked-button>Test 400 validation error</button>
 </div>
 
-@if (validationErrors) {
+@if (validationErrors(); as validationErrors) {
   <div class="mx-auto max-w-lg mt-5 bg-red-100">
     <ul class="space-y-2 p-2">
       @for (error of validationErrors; track $index) {

@@ -1,5 +1,5 @@
-@if (order) {
-<mat-card class="bg-white py-8 max-w-screen-lg mx-auto shadow-md">
+@if (order(); as order) {
+<mat-card class="bg-white py-8 max-w-5xl mx-auto shadow-md">
     <div class="px-4 w-full">
         <div class="flex justify-between items-center align-middle">
             <h2 class="text-2xl text-center font-semibold">Order summary for order #{{order.id}}</h2>

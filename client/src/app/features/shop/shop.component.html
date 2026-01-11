@@ -1,4 +1,5 @@
-@if (products && products.count > 0) {
+@if (products(); as products) {
+@if (products.count > 0) {
 <div class="flex flex-col gap-3">
   <div class="flex justify-between">
     <mat-paginator class="bg-white" (page)="handlePageEvent($event)"
@@ -7,15 +8,11 @@
         [pageIndex]="shopParams.pageNumber - 1" aria-label="select page">
     </mat-paginator>
 
-    <form #searchForm="ngForm" 
-        (ngSubmit)="onSearchChange()"
+    <form #searchForm="ngForm" (ngSubmit)="onSearchChange()"
         class="relative flex items-center w-full max-w-md mx-4">
-      <input 
-          type="search"
+      <input type="search"
           class="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:border-blue-500 focus:ring-blue-500"
-          placeholder="Search" 
-          name="search"
-          [(ngModel)]="shopParams.search" />
+          placeholder="Search" name="search" [(ngModel)]="shopParams.search" />
       <button mat-icon-button type="submit"
           class="absolute inset-y-0 right-8 top-2 flex items-center pl-3">
         <mat-icon class="text-gray-500">search</mat-icon>
@@ -23,11 +20,13 @@
     </form>
 
     <div class="flex gap-3">
-      <button class="match-input-height" mat-stroked-button (click)="openFiltersDialog()">
+      <button class="match-input-height" mat-stroked-button
+          (click)="openFiltersDialog()">
         <mat-icon>filter_list</mat-icon>
         Filters
       </button>
-      <button class="match-input-height" mat-stroked-button [matMenuTriggerFor]="sortMenu">
+      <button class="match-input-height" mat-stroked-button
+          [matMenuTriggerFor]="sortMenu">
         <mat-icon>swap_vert</mat-icon>
         Sort
       </button>
@@ -53,11 +52,7 @@
   </mat-selection-list>
 </mat-menu>
 } @else {
-  <app-empty-state 
-    message="No products match this filter"
-    icon="filter_alt_off"
-    actionText="Reset filters"
-    (action)="resetFilters()"
-  />
+<app-empty-state message="No products match this filter" icon="filter_alt_off"
+    actionText="Reset filters" (action)="resetFilters()" />
 }
-
+}

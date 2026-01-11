@@ -1,5 +1,5 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { OrderService } from '../../core/services/order.service';
 import { Order } from '../../shared/models/order';
@@ -16,11 +16,11 @@ import { Order } from '../../shared/models/order';
 })
 export class OrderComponent {
   private orderService = inject(OrderService);
-  orders: Order[] = [];
+  orders = signal<Order[]>([]);
 
   ngOnInit(): void {
     this.orderService.getOrdersForUser().subscribe({
-      next: orders => this.orders = orders
+      next: orders => this.orders.set(orders)
     })
   }
 }

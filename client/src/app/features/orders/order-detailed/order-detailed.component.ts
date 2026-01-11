@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { OrderService } from '../../../core/services/order.service';
 import { Order } from '../../../shared/models/order';
@@ -29,7 +29,7 @@ export class OrderDetailedComponent {
   private accountService = inject(AccountService);
   private adminService = inject(AdminService);
   private router = inject(Router);
-  order?: Order;
+  order = signal<Order | undefined>(undefined);
   buttonText = this.accountService.isAdmin() ? 'Return to admin' : 'Return to orders'
 
   ngOnInit(): void {
@@ -51,7 +51,7 @@ export class OrderDetailedComponent {
       : this.orderService.getOrderDetailed(+id);
 
     loadOrderData.subscribe({
-      next: order => this.order = order
+      next: order => this.order.set(order)
     })
   }
 }

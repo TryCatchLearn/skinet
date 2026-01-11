@@ -36,13 +36,13 @@
             </mat-step>
             <mat-step label="Confirmation">
                 <app-checkout-review
-                    [confirmationToken]="confirmationToken"></app-checkout-review>
+                    [confirmationToken]="confirmationToken()"></app-checkout-review>
                 <div class="flex justify-between mt-6">
                     <button class="z-0" matStepperPrevious
                         mat-stroked-button>Back</button>
-                    <button [disabled]="!confirmationToken || loading" (click)="confirmPayment(stepper)" class="z-0"
+                    <button [disabled]="!confirmationToken() || loading()" (click)="confirmPayment(stepper)" class="z-0"
                         mat-flat-button>
-                        @if (loading) {
+                        @if (loading()) {
                         <mat-spinner diameter="20"></mat-spinner>
                         } @else {
                         <span>Pay {{cartService.totals()?.total | currency}}</span>
