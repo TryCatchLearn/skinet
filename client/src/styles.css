@@ -1,0 +1,9 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'tailwindcss';
+
+@theme inline {
+    --color-primary: var(--mat-sys-primary);
+    --color-secondary: var(--mat-sys-secondary);
+    --color-error: var(--mat-sys-error);
+}
