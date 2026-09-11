@@ -1,23 +1,5 @@
 <app-header />
 
 <div class="container pt-26 mx-10">
-    <h1 class="text-3xl font-bold underline text-primary">Welcome to {{title()}}</h1>
-
-    @if (productsResouce.isLoading()) {
-    <p>Loading...</p>
-    }
-
-    @if (productsResouce.value()?.data; as products) {
-    <ul>
-        @for (product of products; track product.id) {
-        <li>{{product.name}}</li>
-        }
-    </ul>
-    }
-
-    @if (productsResouce.error()) {
-        <span class="text-error">Failed to load products</span>
-    }
-
-
+    <app-shop />
 </div>

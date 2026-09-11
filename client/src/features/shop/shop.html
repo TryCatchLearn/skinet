@@ -1,0 +1,64 @@
+<div class="flex flex-col gap-3">
+    <div class="flex justify-between items-center">
+        <mat-paginator 
+            (page)="onPaginationEvent($event)"
+            [length]="shopService.productsResouce.value()?.count"
+            [pageSize]="shopService.shopParams().pageSize"
+            [showFirstLastButtons]="true"
+            [pageSizeOptions]="pageSizeOptions"
+            [pageIndex]="shopService.shopParams().pageNumber - 1"
+            aria-label="select page"
+            class="bg-(--sys-container-on-low)!"
+        />
+
+        <form
+            (submit)="onSearchChange($event)"
+            class="relative flex items-center flex-1 mx-4"
+        >
+            <input 
+                [formField]="searchForm.searchTerm"
+                class="flex-1 p-4 text-sm border border-gray-300 rounded-lg h-11"
+                placeholder="search"
+            />
+            <button mat-icon-button 
+                type="submit"
+                class="absolute inset-y-0 right-10 flex items-center"
+            >
+                <mat-icon>search</mat-icon>    
+            </button>
+        </form>
+
+        <div class="flex gap-3 items-center">
+            <button mat-stroked-button (click)="openFiltersDialog()">
+                <mat-icon>filter_list</mat-icon>
+                Filters
+            </button>
+            <button mat-stroked-button [matMenuTriggerFor]="sortMenu">
+                <mat-icon>sort_by_alpha</mat-icon>
+                Sort
+            </button>
+            <button (click)="onReset()" mat-stroked-button class="text-center">
+                <mat-icon class="-mr-2!">refresh</mat-icon>
+            </button>
+        </div>
+
+    </div>
+    <div class="grid grid-cols-5 gap-4">
+        @for (product of shopService.productsResouce.value()?.data; track product.id) {
+        <app-product-item [product]="product" />
+        }
+    </div>
+</div>
+
+<mat-menu #sortMenu>
+    <mat-selection-list [multiple]="false" (selectionChange)="onSortChange($event)">
+        @for (sort of sortOptions; track $index) {
+            <mat-list-option 
+                [value]="sort.value"
+                [selected]="shopService.shopParams().sort === sort.value"
+            >
+                {{sort.name}}
+            </mat-list-option>
+        }
+    </mat-selection-list>
+</mat-menu>

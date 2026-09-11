@@ -1,0 +1,30 @@
+<div>
+    <h3 class="text-3xl text-center pt-6 mb-3">Filters</h3>
+    <mat-divider />
+    <div class="flex p-4">
+        <div class="w-1/2">
+            <h4 class="font-semibold text-xl text-primary">Brands</h4>
+            <mat-selection-list #brandList>
+                @for (brand of shopService.brandsResource.value(); track brand) {
+                    <mat-list-option 
+                        [selected]="shopService.shopParams().brands.includes(brand)" 
+                        [value]="brand">{{brand}}</mat-list-option>
+                }
+            </mat-selection-list>
+        </div>
+        <div class="w-1/2">
+            <h4 class="font-semibold text-xl text-primary">Types</h4>
+            <mat-selection-list #typeList>
+                @for (type of shopService.typesResource.value(); track type) {
+                    <mat-list-option 
+                        [value]="type"
+                        [selected]="shopService.shopParams().types.includes(type)"     
+                    >{{type}}</mat-list-option>
+                }
+            </mat-selection-list>
+        </div>
+    </div>
+    <div class="flex justify-end mr-6">
+        <button mat-flat-button (click)="applyFilters()">Apply filters</button>
+    </div>
+</div>
