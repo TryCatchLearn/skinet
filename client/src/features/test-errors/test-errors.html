@@ -1,0 +1,23 @@
+<div class="flex flex-col gap-6 py-10">
+    <h1 class="text-2xl font-bold">Test errors</h1>
+
+    <div class="flex gap-3">
+        <button mat-stroked-button (click)="getError('buggy/badrequest')">400 Bad Request</button>
+        <button mat-stroked-button (click)="getError('buggy/validationError', 
+            'POST', {})">400 Validation error</button>
+        <button mat-stroked-button (click)="getError('buggy/unauthorized')">401 Unauthorized</button>
+        <button mat-stroked-button (click)="getError('buggy/notfound')">404 Not found</button>
+        <button mat-stroked-button (click)="getError('buggy/internalerror')">500 Internal server error</button>
+    </div>
+</div>
+
+@if (errorResource.isLoading()) {
+<p>Loading...</p>
+}
+
+@if (errorResource.error()) {
+    <h3 class="text-xl font-semibold">Http resource error status</h3>
+    <pre class="max-w-3xl overflow-auto rounded bg-(--mat-sys-error-container) p-4 text-sm">
+        {{ errorResource.error()| json }}
+    </pre>
+}

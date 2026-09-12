@@ -7,6 +7,14 @@
   ));
 }
 
+.snackbar-error {
+  @include mat.snack-bar-overrides((
+    button-color: var(--mat-sys-on-error),
+    container-color: var(--mat-sys-error),
+    supporting-text-color: var(--mat-sys-on-error)
+  ));
+}
+
 html {
   height: 100%;
   @include mat.theme(

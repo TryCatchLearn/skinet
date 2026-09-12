@@ -1,0 +1,9 @@
+<div class="flex flex-col items-center justify-center gap-4 py-32 text-center">
+    <h1 class="text-6xl font-bold">500</h1>
+    <p class="text-xl">An unexpected error occurred on the server</p>
+    @if (isDevMode() && error) {
+        <pre class="mt-4 whitespace-pre-wrap rounded bg-(--mat-sys-error-container) text-left text-sm">
+            {{error | json}}
+        </pre>
+    }
+</div>

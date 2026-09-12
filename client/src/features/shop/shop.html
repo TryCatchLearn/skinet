@@ -2,7 +2,7 @@
     <div class="flex justify-between items-center">
         <mat-paginator 
             (page)="onPaginationEvent($event)"
-            [length]="shopService.productsResouce.value()?.count"
+            [length]="shopService.displayedProducts()?.count"
             [pageSize]="shopService.shopParams().pageSize"
             [showFirstLastButtons]="true"
             [pageSizeOptions]="pageSizeOptions"
@@ -43,8 +43,10 @@
         </div>
 
     </div>
-    <div class="grid grid-cols-5 gap-4">
-        @for (product of shopService.productsResouce.value()?.data; track product.id) {
+    <div class="grid grid-cols-5 gap-4 transition-opacity"
+        [class.opacity-50]="shopService.productsResouce.isLoading()"
+    >
+        @for (product of shopService.displayedProducts()?.data; track product.id) {
         <app-product-item [product]="product" />
         }
     </div>

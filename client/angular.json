@@ -17,6 +17,10 @@
           "path": "src",
           "skipTests": true,
           "type": "service"
+        },
+        "@schematics/angular:interceptor": {
+          "skipTests": true,
+          "path": "src/core"
         }
       },
       "root": "",

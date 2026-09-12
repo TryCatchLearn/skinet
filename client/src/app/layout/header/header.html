@@ -1,12 +1,19 @@
 <header class="fixed top-0 z-50 shadow-md p-3 w-full bg-(--mat-sys-surface)">
     <div class="flex align-middle items-center justify-between mx-10">
-        <img routerLink="/" src="/images/logo.png" alt="app logo" class="h-16 cursor-pointer">
+        <div class="relative">
+            <img routerLink="/" src="/images/logo.png" alt="app logo" class="h-16 cursor-pointer">
+
+            @if (busyService.loading()) {
+            <mat-progress-spinner class="absolute! left-full top-1/2 ml-2 -translate-y-1/2 h-6! w-6!"
+                mode="indeterminate" />
+            }
+        </div>
+
+
         <nav class="flex gap-3 my-2 uppercase text-xl">
-            <a routerLink="/" routerLinkActive="text-primary" 
-                [routerLinkActiveOptions]="{exact: true}">Home</a>
-            <a routerLink="/shop" routerLinkActive="text-primary"
-                [routerLinkActiveOptions]="{exact: true}">Shop</a>
-            <a>Contact</a>
+            <a routerLink="/" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: true}">Home</a>
+            <a routerLink="/shop" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: true}">Shop</a>
+            <a routerLink="/test-errors" routerLinkActive="text-primary">Errors</a>
         </nav>
         <div class="flex gap-3 align-middle">
             <a matBadge="5" matBadgeSize="large" class="custom-badge mt-2 mr-2">

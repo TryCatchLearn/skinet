@@ -1,5 +1,5 @@
 import { HttpParams, httpResource } from '@angular/common/http';
-import { Service, signal } from '@angular/core';
+import { linkedSignal, Service, signal } from '@angular/core';
 import { Pagination } from '../shared/pagination.model';
 import { Product } from './product.model';
 import { environment } from '../environments/environment';
@@ -38,4 +38,10 @@ export class ShopService {
 
     readonly brandsResource = httpResource<string[]>(() => `${this.baseUrl}/products/brands`);
     readonly typesResource = httpResource<string[]>(() => `${this.baseUrl}/products/types`);
+
+    readonly displayedProducts = linkedSignal<Pagination<Product> | undefined, 
+        Pagination<Product> | undefined>({
+            source: () => this.productsResouce.value(),
+            computation: (value, previous) => value ?? previous?.value
+    })
 }
