@@ -1,0 +1,43 @@
+@if (item(); as item) {
+<div class="rounded-lg border border-gray-300 bg-(--mat-sys-surface) p-4 shadow-sm mb-4">
+    <div class="flex items-center gap-6">
+        <a routerLink="/shop/{{item.productId}}" class="shrink-0">
+            <img class="h-20 w-20" src="{{item.pictureUrl}}" alt="product image">
+        </a>
+        <div class="w-100 shrink-0 space-y-4">
+            <a routerLink="/shop/{{item.productId}}" class="text-xl font-semibold">
+                {{item.productName}}
+            </a>
+
+            <div class="flex items-center gap-4">
+                <button 
+                    [disabled]="cartService.loading()"
+                    (click)="cartService.removeItemFromCart(item.productId, item.quantity)" 
+                    mat-button class="text-error!"
+                >
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <button [disabled]="cartService.loading()" mat-icon-button (click)="cartService.removeItemFromCart(item.productId)">
+                <mat-icon>remove</mat-icon>
+            </button>
+
+            <div class="font-semibold text-xl">{{item.quantity}}</div>
+
+            <button [disabled]="cartService.loading()" (click)="cartService.addItemToCart(item)" mat-icon-button>
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+
+        <div class="text-end w-32 ml-auto">
+            <p class="font-bold text-xl">{{item.price * item.quantity | currency}}</p>
+        </div>
+    </div>
+</div>
+
+}
+

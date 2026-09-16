@@ -1,9 +1,9 @@
 import { HttpParams, httpResource } from '@angular/common/http';
 import { linkedSignal, Service, signal } from '@angular/core';
-import { Pagination } from '../shared/pagination.model';
-import { Product } from './product.model';
-import { environment } from '../environments/environment';
-import { ShopParams } from './shop-params.model';
+import { ShopParams } from '../models/shop-params.model';
+import { environment } from '../../environments/environment';
+import { Pagination } from '../../shared/pagination.model';
+import { Product } from '../models/product.model';
 
 @Service()
 export class ShopService {

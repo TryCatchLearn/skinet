@@ -3,8 +3,9 @@ import { MatBadge } from '@angular/material/badge';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { BusyService } from '../../../core/busy.service';
+import { BusyService } from '../../../core/services/busy.service';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   imports: [MatBadge, MatIcon, MatButton, RouterLink, RouterLinkActive, MatProgressSpinner],
@@ -14,4 +15,5 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 })
 export class Header {
   protected busyService = inject(BusyService);
+  protected cartService = inject(CartService);
 }

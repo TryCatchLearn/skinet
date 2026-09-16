@@ -1,0 +1,14 @@
+<section>
+    <div class="mx-10">
+        <div class="flex w-full items-start gap-6">
+            <div class="w-3/4">
+                @for (item of cartService.cartResource.value()?.items; track item.productId) {
+                     <app-cart-item [item]="item" />
+                }
+            </div>
+            <div class="w-1/4">
+                <app-order-summary />
+            </div>
+        </div>
+    </div>
+</section>

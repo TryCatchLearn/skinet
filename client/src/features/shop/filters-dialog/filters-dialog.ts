@@ -1,9 +1,9 @@
 import { Component, inject, viewChild } from '@angular/core';
-import { ShopService } from '../../../core/shop.service';
 import { MatDivider } from '@angular/material/divider';
 import { MatSelectionList, MatListOption } from '@angular/material/list';
 import { MatAnchor, MatButton } from '@angular/material/button';
 import { MatDialogRef } from '@angular/material/dialog';
+import { ShopService } from '../../../core/services/shop.service';
 
 @Component({
   imports: [MatDivider, MatSelectionList, MatListOption, MatAnchor, MatButton],

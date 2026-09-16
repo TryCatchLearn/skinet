@@ -1,5 +1,4 @@
 import { Component, inject, signal } from '@angular/core';
-import { ShopService } from '../../core/shop.service';
 import { ProductItem } from './product-item/product-item';
 import { MatDialog } from '@angular/material/dialog';
 import { FiltersDialog } from './filters-dialog/filters-dialog';
@@ -9,6 +8,7 @@ import { MatMenuTrigger, MatMenu } from '@angular/material/menu';
 import { MatSelectionList, MatListOption, MatSelectionListChange } from '@angular/material/list';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { form, FormField } from '@angular/forms/signals';
+import { ShopService } from '../../core/services/shop.service';
 
 @Component({
   imports: [
