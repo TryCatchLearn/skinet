@@ -1,0 +1,46 @@
+<div>
+    <h4 class="text-xl font-semibold">Billing and delivery information</h4>
+    @if (stripeService.confirmationToken(); as token) {
+    <dl>
+        <dt>Shipping address</dt>
+        <dd class="mt-1 font-light">
+            @if (token.shipping && token.shipping.address; as address) {
+                <span>{{token.shipping.name}} </span>
+                <span>{{address.line1}} </span>
+                @if (address.line2) {
+                    <span>{{address.line2}} </span>
+                }
+                <span>{{address.city}}, {{address.state}}, {{address.postal_code}} </span>
+                <span>{{address.country}}</span>
+            }
+        </dd>
+        <dt>Payment details</dt>
+        <dd class="mt-1 font-light">
+            @if (token.payment_method_preview.card; as card) {
+                <span class="uppercase">{{card.brand}}</span>
+                <span> ending in {{card.last4}} (expires {{card.exp_month}}/{{card.exp_year}})</span>
+            }
+        </dd>
+    </dl>
+    } @else {
+        <span>Preparing payment summary...</span>
+    }
+
+</div>
+
+<div class="mt-6 mx-auto w-full">
+    <table class="divide-y divide-gray-300 w-full bg-(--mat-sys-surface-container-low) rounded-xl">
+        @for (item of cartService.cartResource.value()?.items; track item.productId) {
+            <tr>
+               <td class="p-4">
+                    <div class="flex items-center gap-4">
+                        <img src="{{item.pictureUrl}}" alt="product image" class="w-10 h-10">
+                        <span>{{item.productName}}</span>
+                    </div>
+               </td> 
+               <td class="p-4">x{{item.quantity}}</td>
+               <td class="p-4 text-right">{{item.price | currency}}</td>
+            </tr>
+        }
+    </table>
+</div>

@@ -3,11 +3,14 @@ import { environment } from '../../environments/environment';
 import { HttpClient, httpResource } from '@angular/common/http';
 import { Cart, Item } from '../models/cart.model';
 import { Product } from '../models/product.model';
+import { CheckoutService } from './checkout.service';
+import { firstValueFrom } from 'rxjs';
 
 @Service()
 export class CartService {
     private baseUrl = environment.baseUrl;
     private http = inject(HttpClient);
+    private checkoutService = inject(CheckoutService);
 
     private cartId = signal<string | null>(localStorage.getItem('cart_id'));
 
@@ -22,9 +25,10 @@ export class CartService {
 
     totals = computed(() => {
         const items = this.cartResource.value()?.items;
+        const deliveryId = this.cartResource.value()?.deliveryMethodId;
 
         const subtotal = items?.reduce((sum, item) => sum + item.price * item.quantity, 0) ?? 0;
-        const shipping = 0;
+        const shipping = this.checkoutService.deliveryMethods()?.find(x => x.id === deliveryId)?.price ?? 0;
         const discount = 0;
         const total = subtotal + shipping - discount;
 
@@ -36,15 +40,16 @@ export class CartService {
         }
     })
 
-    setCart(cart: Cart) {
+    async setCart(cart: Cart) {
         this.loading.set(true);
-        this.http.post<Cart>(`${this.baseUrl}/cart`, cart).subscribe({
-            next: cart => {
-                this.cartId.set(cart.id);
-                this.cartResource.set(cart);
-            },
-            complete: () => this.loading.set(false)
-        })
+        try {
+            const updatedCart = await firstValueFrom(this.http.post<Cart>(`${this.baseUrl}/cart`, cart));
+            this.cartId.set(cart.id);
+            this.cartResource.set(updatedCart);
+            return updatedCart;
+        } finally {
+            this.loading.set(false)
+        }
     }
 
     addItemToCart(item: Item | Product, quantity = 1) {

@@ -2,6 +2,7 @@ import { computed, inject, Service } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams, httpResource } from '@angular/common/http';
 import { Address, User } from '../models/user.model';
+import { tap } from 'rxjs';
 
 @Service()
 export class AccountService {
@@ -29,6 +30,13 @@ export class AccountService {
     }
 
     updateAddress(address: Address) {
-        return this.http.post(this.baseUrl + '/account/address', address);
+        return this.http.post(this.baseUrl + '/account/address', address).pipe(
+            tap(() => {
+                this.userResource.update(user => {
+                    if (user) user.address = address;
+                    return user;
+                })
+            })
+        );
     }
 }

@@ -1,1 +1,60 @@
-<h1 class="text-2xl">Only authorized users should get here!</h1>
+<div class="flex w-full gap-6">
+    <div class="w-3/4">
+        <mat-stepper 
+            #stepper
+            [linear]="true"
+            (selectionChange)="onStepChange($event)" 
+            class="bg-(--mat-sys-surface) shadow-sm border border-gray-300 rounded-xl"
+        >
+            <mat-step label="Address" [completed]="addressComplete()">
+                <div id="address-element"></div>
+                <div class="flex justify-end mt-1">
+                    <mat-checkbox 
+                        [checked]="saveAddress()" 
+                        (change)="saveAddress.set($event.checked)"
+                    >
+                        Save as default address
+                    </mat-checkbox>
+                </div>
+
+                <div class="flex justify-between mt-6">
+                    <button mat-stroked-button routerLink="/shop">Continue shopping</button>
+                    <button [disabled]="!addressComplete()" mat-flat-button matStepperNext>Next</button>
+                </div>
+            </mat-step>
+            <mat-step label="Shipping" [completed]="deliveryComplete()">
+                <app-checkout-delivery (deliveryComplete)="deliveryComplete.set($event)" />
+                <div class="flex justify-between mt-6">
+                    <button mat-stroked-button matStepperPrevious>Back</button>
+                    <button [disabled]="!deliveryComplete()" mat-flat-button matStepperNext>
+                        Next
+                    </button>
+                </div>
+            </mat-step>
+            <mat-step label="Payment" [completed]="paymentComplete()">
+                <div id="payment-element"></div>
+                <div class="flex justify-between mt-6">
+                    <button mat-stroked-button matStepperPrevious>Back</button>
+                    <button [disabled]="!paymentComplete()" mat-flat-button matStepperNext>Next</button>
+                </div>
+            </mat-step>
+            <mat-step label="Confirmation">
+                <app-checkout-review />
+                <div class="flex justify-between mt-6">
+                    <button mat-stroked-button matStepperPrevious>Back</button>
+                    <button 
+                        [disabled]="!checkoutComplete() || processing()" 
+                        mat-flat-button
+                        (click)="onConfirmPayment(stepper)"
+                    >
+                        {{processing() ? 'Processing payment...' : 'Pay ' 
+                            + (cartService.totals().total | currency)}}
+                    </button>
+                </div>
+            </mat-step>
+        </mat-stepper>
+    </div>
+    <div class="w-1/4">
+        <app-order-summary />
+    </div>
+</div>

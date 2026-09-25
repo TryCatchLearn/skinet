@@ -1,9 +1,122 @@
-import { Component } from '@angular/core';
+import { afterRenderEffect, Component, computed, inject, signal } from '@angular/core';
+import { OrderSummary } from '../orders/order-summary/order-summary';
+import { MatStepper, MatStep, MatStepperNext, MatStepperPrevious } from '@angular/material/stepper';
+import { StripeService } from '../../core/services/stripe.service';
+import { MatButton } from '@angular/material/button';
+import { Router, RouterLink } from '@angular/router';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { Address } from '../../core/models/user.model';
+import { AccountService } from '../../core/services/account.service';
+import { firstValueFrom } from 'rxjs';
+import { CheckoutDelivery } from './checkout-delivery/checkout-delivery';
+import { CheckoutReview } from './checkout-review/checkout-review';
+import { CartService } from '../../core/services/cart.service';
+import { CurrencyPipe } from '@angular/common';
+import { SnackbarService } from '../../core/services/snackbar.service';
+import { StripeError } from '@stripe/stripe-js';
+
+enum CheckoutStep {
+  Address,
+  Delivery,
+  Payment,
+  Review
+}
 
 @Component({
-  imports: [],
+  imports: [
+    OrderSummary,
+    MatStepper,
+    MatStep,
+    MatButton,
+    MatStepperNext,
+    RouterLink,
+    MatCheckbox,
+    CheckoutDelivery,
+    MatStepperPrevious,
+    CheckoutReview,
+    CurrencyPipe
+  ],
   selector: 'app-checkout',
   styleUrl: './checkout.css',
   templateUrl: './checkout.html',
 })
-export class Checkout {}
+export class Checkout {
+  private stripeService = inject(StripeService);
+  protected saveAddress = signal(false);
+  private accountService = inject(AccountService);
+  protected cartService = inject(CartService);
+  protected addressComplete = signal(false);
+  protected deliveryComplete = signal(false);
+  protected paymentComplete = signal(false);
+  private snackbar = inject(SnackbarService);
+  protected processing = signal(false);
+  private router = inject(Router);
+
+  protected checkoutComplete = computed(() => {
+    return this.addressComplete() && this.deliveryComplete() && this.paymentComplete()
+  })
+
+  constructor() {
+    afterRenderEffect(() => {
+      const addressElement = this.stripeService.addressElementResource.value();
+      if (addressElement) {
+        addressElement.mount('#address-element');
+        addressElement.on('change', event => this.addressComplete.set(event.complete))
+      };
+
+      const paymentElement = this.stripeService.paymentElementResource.value();
+      if (paymentElement) {
+        paymentElement.mount('#payment-element');
+        paymentElement.on('change', event => this.paymentComplete.set(event.complete));
+      };
+    })
+  }
+
+  async onStepChange(event: StepperSelectionEvent) {
+    if (event.selectedIndex === CheckoutStep.Delivery) {
+      if (this.saveAddress()) {
+        const address = await this.getAddressFromStripeAddress();
+        address && void firstValueFrom(this.accountService.updateAddress(address))
+      }
+    }
+    if (event.selectedIndex === CheckoutStep.Review) {
+      const result = await this.stripeService.createConfirmationToken();
+      if (result?.error) this.snackbar.error(result.error.message ?? 'Payment details invalid');
+    }
+  }
+
+  async onConfirmPayment(stepper: MatStepper) {
+    this.processing.set(true);
+    try {
+      const result = await this.stripeService.confirmPayment();
+      if (result?.error) throw result.error;
+      if (result?.paymentIntent?.status === 'succeeded') {
+        this.cartService.deleteCart();
+        this.snackbar.success('Payment successful');
+        void this.router.navigateByUrl('/');
+      }
+    } catch (error) {
+      this.snackbar.error((error as StripeError)?.message ?? 'Payment could not be processed');
+      stepper.previous();
+    } finally {
+      this.processing.set(false);
+    }
+  }
+
+  private async getAddressFromStripeAddress(): Promise<Address | null> {
+    const addressElement = this.stripeService.addressElementResource.value();
+    const result = await addressElement?.getValue();
+    const address = result?.value.address;
+    if (address) {
+      return {
+        line1: address.line1,
+        line2: address.line2 || undefined,
+        city: address.city,
+        state: address.state,
+        country: address.country,
+        postalCode: address.postal_code
+      }
+    } else return null;
+  }
+}

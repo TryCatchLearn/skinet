@@ -11,7 +11,7 @@ import { MatButton } from '@angular/material/button';
 import { TextField } from '../../../shared/text-field/text-field';
 
 @Component({
-  imports: [MatCard, MatFormField, MatLabel, MatInput, MatButton, FormField, MatError, TextField],
+  imports: [MatCard, MatButton, TextField],
   selector: 'app-register',
   styleUrl: './register.css',
   templateUrl: './register.html',
