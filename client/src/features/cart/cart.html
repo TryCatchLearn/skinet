@@ -1,9 +1,13 @@
 <section>
+    @if (!cartService.cartResource.value()) {
+    <app-empty-state message="Your shopping cart is empty" icon="remove_shopping_cart" actionText="Go to shop"
+        (action)="onAction()" />
+    } @else {
     <div class="mx-10">
         <div class="flex w-full items-start gap-6">
             <div class="w-3/4">
                 @for (item of cartService.cartResource.value()?.items; track item.productId) {
-                     <app-cart-item [item]="item" />
+                <app-cart-item [item]="item" />
                 }
             </div>
             <div class="w-1/4">
@@ -11,4 +15,6 @@
             </div>
         </div>
     </div>
+    }
+
 </section>

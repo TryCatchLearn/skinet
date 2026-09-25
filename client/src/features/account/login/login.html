@@ -1,0 +1,18 @@
+<mat-card class="max-w-lg mx-auto mt-32 p-8 bg-(--mat-sys-surface)">
+    <form (submit)="onSubmit($event)">
+        <div class="flex justify-center mb-6 items-center">
+            <h1 class="text-3xl font-semibold text-primary">Login</h1>
+        </div>
+        <mat-form-field appearance="outline" class="w-full mb-4">
+            <mat-label>Email address</mat-label>
+            <input matInput [formField]="loginForm.email" type="email" placeholder="name@example.com">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-full mb-4">
+            <mat-label>Password</mat-label>
+            <input matInput [formField]="loginForm.password" type="password" placeholder="password">
+        </mat-form-field>
+        <button [disabled]="loading()" mat-flat-button type="submit" class="w-full py-2">
+            {{loading() ? 'Signing in...' : 'Sign in'}}
+        </button>
+    </form>
+</mat-card>

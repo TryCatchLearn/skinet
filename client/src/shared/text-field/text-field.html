@@ -1,0 +1,7 @@
+<mat-form-field appearance="outline" class="w-full mb-4">
+    <mat-label>{{label()}}</mat-label>
+    <input matInput [formField]="field()" [type]="type()" [placeholder]="placeholder()">
+    @if (field()().invalid() && field()().touched()) {
+    <mat-error>{{field()().errors()[0].message}}</mat-error>
+    }
+</mat-form-field>

@@ -1,0 +1,44 @@
+<mat-card class="max-w-lg mx-auto mt-8 p-8 bg-(--mat-sys-surface)!">
+    <form (submit)="onSubmit($event)">
+        <div class="flex justify-center mb-6 items-center">
+            <h1 class="text-3xl font-semibold text-primary">Register</h1>
+        </div>
+        <app-text-field 
+            [field]="registerForm.firstName" 
+            label="First name" 
+            placeholder="John" 
+        />
+        <app-text-field 
+            [field]="registerForm.lastName" 
+            label="Last name" 
+            placeholder="Doe" 
+        />
+        <app-text-field 
+            [field]="registerForm.email" 
+            label="Email" 
+            placeholder="email@example.com" 
+            type="email"
+        />
+        <app-text-field 
+            [field]="registerForm.password" 
+            label="Password" 
+            placeholder="John" 
+            type="password"
+        />
+
+        @if (validationErrors().length > 0) {
+            <div class="mb-3 -mt-6 p-4 bg-red-100 text-red-500">
+                <ul class="list-disc px-3">
+                    @for (error of validationErrors(); track error) {
+                        <li>{{error}}</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <button [disabled]="loading() || registerForm().invalid()" mat-flat-button type="submit" class="w-full py-2">
+            {{loading() ? 'Registering...' : 'Register'}}
+        </button>
+    </form>
+</mat-card>
+
