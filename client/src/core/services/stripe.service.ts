@@ -82,7 +82,16 @@ export class StripeService {
         const submitResult = await elements.submit();
         if (submitResult.error) return submitResult;
 
-        const result = await stripe.createConfirmationToken({elements});
+        const result = await stripe.createConfirmationToken({
+            elements,
+            params: {
+                payment_method_data: {
+                    billing_details: {
+                        email: this.accountService.currentUser()?.email
+                    }
+                }
+            }
+        });
         if (result.confirmationToken) this.confirmationToken.set(result.confirmationToken);
         return result;
     }

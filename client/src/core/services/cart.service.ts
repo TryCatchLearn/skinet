@@ -16,7 +16,7 @@ export class CartService {
 
     loading = signal(false);
 
-    cartResource = httpResource<Cart>(() => this.cartId() 
+    cartResource = httpResource<Cart>(() => this.cartId()
         ? `${this.baseUrl}/cart?id=${this.cartId()}` : undefined);
 
     itemCount = computed(() => {
@@ -78,14 +78,17 @@ export class CartService {
             }
         }
     }
-    
+
     deleteCart() {
         this.http.delete(this.baseUrl + '/cart?id=' + this.cartResource.value()?.id).subscribe({
-            next: () => {
-                localStorage.removeItem('cart_id');
-                this.cartResource.value.set(undefined);
-            }
+            next: () => this.forgetCart()
         })
+    }
+
+    forgetCart() {
+        localStorage.removeItem('cart_id');
+        this.cartResource.value.set(undefined);
+        this.cartId.set(null);
     }
 
     private addOrUpdateCartItem(items: Item[], item: Item, quantity: number): Item[] {

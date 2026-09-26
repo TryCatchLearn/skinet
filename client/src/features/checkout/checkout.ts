@@ -15,6 +15,8 @@ import { CartService } from '../../core/services/cart.service';
 import { CurrencyPipe } from '@angular/common';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { StripeError } from '@stripe/stripe-js';
+import { OrderToCreate, ShippingAddress } from '../../core/models/order.model';
+import { OrderService } from '../../core/services/order.service';
 
 enum CheckoutStep {
   Address,
@@ -52,6 +54,7 @@ export class Checkout {
   private snackbar = inject(SnackbarService);
   protected processing = signal(false);
   private router = inject(Router);
+  private orderService = inject(OrderService);
 
   protected checkoutComplete = computed(() => {
     return this.addressComplete() && this.deliveryComplete() && this.paymentComplete()
@@ -92,9 +95,7 @@ export class Checkout {
       const result = await this.stripeService.confirmPayment();
       if (result?.error) throw result.error;
       if (result?.paymentIntent?.status === 'succeeded') {
-        this.cartService.deleteCart();
-        this.snackbar.success('Payment successful');
-        void this.router.navigateByUrl('/');
+        this.createOrder();
       }
     } catch (error) {
       this.snackbar.error((error as StripeError)?.message ?? 'Payment could not be processed');
@@ -104,12 +105,28 @@ export class Checkout {
     }
   }
 
-  private async getAddressFromStripeAddress(): Promise<Address | null> {
+  private async createOrder() {
+    try {
+      const orderModel = await this.createOrderModel();
+      const order = await firstValueFrom(this.orderService.createOrder(orderModel));
+      this.cartService.deleteCart();
+      this.snackbar.success('Payment successful');
+      void this.router.navigateByUrl(`/orders/${order.id}`);
+    } catch (error) {
+      console.log(error);
+      this.cartService.forgetCart();
+      this.snackbar.success('Payment successful.  We are finalizing your order.  This could take a while');
+      void this.router.navigateByUrl('/');
+    }
+  }
+
+  private async getAddressFromStripeAddress(): Promise<Address | ShippingAddress | null> {
     const addressElement = this.stripeService.addressElementResource.value();
     const result = await addressElement?.getValue();
     const address = result?.value.address;
     if (address) {
       return {
+        name: result.value.name,
         line1: address.line1,
         line2: address.line2 || undefined,
         city: address.city,
@@ -118,5 +135,25 @@ export class Checkout {
         postalCode: address.postal_code
       }
     } else return null;
+  }
+
+  private async createOrderModel(): Promise<OrderToCreate> {
+    const cart = this.cartService.cartResource.value();
+    const shippingAddress = await this.getAddressFromStripeAddress() as ShippingAddress;
+    const card = this.stripeService.confirmationToken()?.payment_method_preview.card;
+
+    if (!cart?.id || !cart.deliveryMethodId || !card || !shippingAddress)
+      throw new Error('Problem creating order');
+
+    return {
+      cartId: cart.id,
+      paymentSummary: {
+        last4: +card.last4,
+        brand: card.brand,
+        expMonth: card.exp_month,
+        expYear: card.exp_year
+      },
+      shippingAddress
+    }
   }
 }

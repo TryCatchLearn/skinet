@@ -17,6 +17,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         );
         builder.Property(x => x.Subtotal).HasColumnType("decimal(18,2)");
         builder.HasMany(x => x.OrderItems).WithOne().OnDelete(DeleteBehavior.Cascade);
+        builder.HasIndex(x => x.PaymentIntentId).IsUnique();
         builder.Property(x => x.OrderDate).HasConversion(
             x => x.ToUniversalTime(),
             x => DateTime.SpecifyKind(x, DateTimeKind.Utc)

@@ -12,6 +12,8 @@ import { Register } from '../features/account/register/register';
 import { authGuard } from '../core/guards/auth-guard';
 import { emptyCartGuard } from '../core/guards/empty-cart-guard';
 import { paymentIntentResolver } from '../core/resolvers/payment-intent-resolver';
+import { Orders } from '../features/orders/orders';
+import { OrderDetailed } from '../features/orders/order-detailed/order-detailed';
 
 export const routes: Routes = [
     {path: '', component: Home},
@@ -22,6 +24,8 @@ export const routes: Routes = [
         canActivate: [authGuard, emptyCartGuard],
         resolve: {paymentIntent: paymentIntentResolver}
     },
+    {path: 'orders', component: Orders, canActivate: [authGuard]},
+    {path: 'orders/:id', component: OrderDetailed, canActivate: [authGuard]},
     {path: 'account/login', component: Login},
     {path: 'account/register', component: Register},
     {path: 'test-errors', component: TestErrors},

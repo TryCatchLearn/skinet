@@ -182,7 +182,7 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("PaymentIntentId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -194,6 +194,9 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DeliveryMethodId");
+
+                    b.HasIndex("PaymentIntentId")
+                        .IsUnique();
 
                     b.ToTable("Orders");
                 });

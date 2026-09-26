@@ -50,7 +50,8 @@ public class PaymentService(IConfiguration config, ICartService cartService,
             {
                 Amount = (long)cart.Items.Sum(i => i.Quantity * (i.Price * 100)) + (long)shippingPrice * 100,
                 Currency = "usd",
-                PaymentMethodTypes = ["card"]
+                PaymentMethodTypes = ["card"],
+                Metadata = new Dictionary<string, string>{{"cartId", cart.Id}}
             };
             intent = await service.CreateAsync(options);
             cart.PaymentIntentId = intent.Id;

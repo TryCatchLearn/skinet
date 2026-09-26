@@ -29,6 +29,10 @@
         "@schematics/angular:resolver": {
           "skipTests": true,
           "path": "src/core/resolvers"
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true,
+          "path": "src/shared/pipes"
         }
       },
       "root": "",

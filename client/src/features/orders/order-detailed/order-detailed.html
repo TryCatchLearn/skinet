@@ -1,0 +1,88 @@
+@if (orderResource.value(); as order) {
+<mat-card class="py-8 shadow-md mx-10 bg-(--mat-sys-surface)! flex flex-col gap-8">
+    <mat-card-header class="flex items-center justify-center gap-3 text-3xl font-semibold">
+        <span>Order summary for #{{order.id}}</span>
+        <mat-chip [ngClass]="{
+            'bg-green-100!': order.status === 'PaymentReceived',
+            'bg-amber-100!': order.status === 'Pending'
+            }">
+            {{order.status | splitCamelCase}}
+        </mat-chip>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="grid grid-cols-2 gap-4 mx-6">
+            <div>
+                <h4 class="text-lg font-semibold">Billing and delivery info</h4>
+                <dl>
+                    <dt>Shipping address</dt>
+                    <dd class="mt-1 font-light">
+                        @if (order.shippingAddress; as address) {
+                        <span>{{order.shippingAddress.name}} </span>
+                        <span>{{address.line1}} </span>
+                        @if (address.line2) {
+                        <span>{{address.line2}} </span>
+                        }
+                        <span>{{address.city}}, {{address.state}}, {{address.postalCode}} </span>
+                        <span>{{address.country}}</span>
+                        }
+                    </dd>
+                    <dt>Payment details</dt>
+                    <dd class="mt-1 font-light">
+                        @if (order.paymentSummary; as card) {
+                        <span class="uppercase">{{card.brand}}</span>
+                        <span> ending in {{card.last4}} (expires {{card.expMonth}}/{{card.expYear}})</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold">Order details</h4>
+                <dl>
+                    <dt>Buyer email</dt>
+                    <dd class="mt-1 font-light">{{order.buyerEmail}}</dd>
+                    <dt>Order date</dt>
+                    <dd class="mt-1 font-light">{{order.orderDate}}</dd>
+                </dl>
+            </div>
+        </div>
+
+        <table class="mt-6 divide-y divide-gray-300 w-full bg-(--mat-sys-surface-container-low) rounded-xl">
+            @for (item of order.orderItems; track item.productId) {
+            <tr>
+                <td class="p-4">
+                    <div class="flex items-center gap-4">
+                        <img src="{{item.pictureUrl}}" alt="product image" class="w-10 h-10">
+                        <span>{{item.productName}}</span>
+                    </div>
+                </td>
+                <td class="p-4">x{{item.quantity}}</td>
+                <td class="p-4 text-right">{{item.price | currency}}</td>
+            </tr>
+            }
+        </table>
+
+        <div class="space-y-4 mx-6 mt-6">
+            <dl class="flex items-center justify-between gap-4">
+                <dt class="font-light">Subtotal</dt>
+                <dd>{{order.subtotal | currency}}</dd>
+            </dl>
+            <dl class="flex items-center justify-between gap-4">
+                <dt class="font-light">Discount</dt>
+                <dd class="text-green-600">{{-0 | currency}}</dd>
+            </dl>
+            <dl class="flex items-center justify-between gap-4">
+                <dt class="font-light">Delivery fee</dt>
+                <dd>{{order.shippingPrice | currency}}</dd>
+            </dl>
+            <dl class="flex items-center justify-between gap-4">
+                <dt class="font-light">Total</dt>
+                <dd>{{order.total | currency}}</dd>
+            </dl>
+        </div>
+    </mat-card-content>
+    <mat-card-actions class="flex justify-between mx-6">
+        <button routerLink="/orders" mat-flat-button>Back to orders</button>
+        <button routerLink="/shop" mat-stroked-button>Continue shopping</button>
+    </mat-card-actions>
+</mat-card>
+}

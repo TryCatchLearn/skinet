@@ -28,6 +28,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(c =>
 });
 builder.Services.AddSingleton<ICartService, CartService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<AppUser>()
