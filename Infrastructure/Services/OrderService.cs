@@ -10,7 +10,7 @@ using Stripe;
 
 namespace Infrastructure.Services;
 
-public class OrderService(ICartService cartService, IUnitOfWork unit, IConfiguration config)
+public class OrderService(ICartService cartService, ICouponService couponService, IUnitOfWork unit, IConfiguration config)
     : IOrderService
 {
     public async Task<Order?> CreateOrderFromCart(string cartId,
@@ -65,8 +65,14 @@ public class OrderService(ICartService cartService, IUnitOfWork unit, IConfigura
 
         var subtotal = Money.ToCents(items.Sum(x => x.Quantity * x.Price));
         var shippingPrice = Money.ToCents(deliveryMethod.Price);
+        long discount = 0;
 
-        var expectedAmount = subtotal + shippingPrice;
+        if (cart.Coupon != null)
+        {
+            discount = await couponService.CalculateDiscountFromSubtotal(cart.Coupon, subtotal);
+        }
+
+        var expectedAmount = subtotal - discount + shippingPrice;
 
         if (expectedAmount != paidAmountInCents) return null;
 
@@ -75,6 +81,7 @@ public class OrderService(ICartService cartService, IUnitOfWork unit, IConfigura
             OrderItems = items,
             DeliveryMethod = deliveryMethod,
             ShippingAddress = shippingAddress,
+            Discount = Money.FromCents(discount),
             Subtotal = Money.FromCents(subtotal),
             PaymentSummary = paymentSummary,
             PaymentIntentId = cart.PaymentIntentId,

@@ -68,7 +68,7 @@
             </dl>
             <dl class="flex items-center justify-between gap-4">
                 <dt class="font-light">Discount</dt>
-                <dd class="text-green-600">{{-0 | currency}}</dd>
+                <dd class="text-green-600">{{-(order.discount || 0) | currency}}</dd>
             </dl>
             <dl class="flex items-center justify-between gap-4">
                 <dt class="font-light">Delivery fee</dt>

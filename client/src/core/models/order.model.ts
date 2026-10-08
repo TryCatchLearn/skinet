@@ -7,6 +7,7 @@ export interface Order {
   deliveryMethod: string
   shippingPrice: number
   orderItems: OrderItem[]
+  discount?: number;
   subtotal: number
   status: string
   total: number

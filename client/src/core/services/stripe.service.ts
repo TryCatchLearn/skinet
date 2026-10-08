@@ -72,7 +72,8 @@ export class StripeService {
         const updatedCart = await firstValueFrom(this.http.post<Cart>(
             `${this.baseUrl}/payments/${cart.id}`, {}));
 
-        this.cartService.cartResource.set(updatedCart);
+        if (!cart.clientSecret) this.cartService.cartResource.set(updatedCart);
+        
         return updatedCart;
     }
 

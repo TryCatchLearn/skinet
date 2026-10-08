@@ -32,14 +32,25 @@
     </div>
 
     <div class="space-y-4 rounded-lg border border-gray-300 bg-(--mat-sys-surface) shadow-sm">
-        <form class="space-y-2 flex flex-col p-2">
+        <form (submit)="applyCouponCode($event)" class="space-y-2 flex flex-col p-2">
             <label class="mb-2 block text-sm">Do you have a voucher code?</label>
+            @if (cartService.cartResource.value()?.coupon; as coupon) {
+            <div class="flex justify-between items-center">
+                <span class="text-sm font-semibold">{{coupon.name}} applied</span>
+                <button (click)="removeCouponCode()" mat-icon-button>
+                    <mat-icon class="text-red-600! cursor-pointer">delete</mat-icon>
+                </button>
+            </div>
+            }
             <mat-form-field appearance="outline">
                 <mat-label>Voucher code</mat-label>
-                <input type="text" matInput>
+                <input [formField]="couponForm.code" type="text" matInput>
             </mat-form-field>
 
-            <button mat-flat-button>Apply code</button>
+            <button [disabled]="!!cartService.cartResource.value()?.coupon || couponPending()" type="submit"
+                mat-flat-button>
+                {{couponPending() ? 'Checking...' : 'Apply code'}}
+            </button>
         </form>
     </div>
 

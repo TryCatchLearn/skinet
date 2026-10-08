@@ -1,7 +1,7 @@
 import { computed, inject, Service, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, httpResource } from '@angular/common/http';
-import { Cart, Item } from '../models/cart.model';
+import { Cart, Coupon, Item } from '../models/cart.model';
 import { Product } from '../models/product.model';
 import { CheckoutService } from './checkout.service';
 import { firstValueFrom } from 'rxjs';
@@ -29,7 +29,17 @@ export class CartService {
 
         const subtotal = items?.reduce((sum, item) => sum + item.price * item.quantity, 0) ?? 0;
         const shipping = this.checkoutService.deliveryMethods()?.find(x => x.id === deliveryId)?.price ?? 0;
-        const discount = 0;
+        const coupon = this.cartResource.value()?.coupon;
+        let discount = 0;
+
+        if (coupon) {
+            if (coupon.amountOff) {
+                discount = Math.min(coupon.amountOff / 100, subtotal);
+            } else if (coupon.percentOff) {
+                const subtotalCents = Math.round(subtotal * 100);
+                discount = Math.floor(subtotalCents * (coupon.percentOff / 100)) / 100;
+            }
+        }
         const total = subtotal + shipping - discount;
 
         return {
@@ -89,6 +99,10 @@ export class CartService {
         localStorage.removeItem('cart_id');
         this.cartResource.value.set(undefined);
         this.cartId.set(null);
+    }
+
+    validateCoupon(code: string) {
+        return firstValueFrom(this.http.get<Coupon>(`${this.baseUrl}/coupons/${code}`));
     }
 
     private addOrUpdateCartItem(items: Item[], item: Item, quantity: number): Item[] {
