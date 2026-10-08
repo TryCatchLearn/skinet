@@ -1,6 +1,7 @@
 using System;
 using Core.Entities;
 using Core.Entities.OrderAggregate;
+using Core.Extensions;
 using Core.Interfaces;
 using Core.Specifications;
 using Microsoft.EntityFrameworkCore;
@@ -62,8 +63,10 @@ public class OrderService(ICartService cartService, IUnitOfWork unit, IConfigura
 
         if (deliveryMethod == null) return null;
 
-        var expectedAmount = (long)items.Sum(x => x.Quantity * (x.Price * 100)) 
-            + (long)deliveryMethod.Price * 100;
+        var subtotal = Money.ToCents(items.Sum(x => x.Quantity * x.Price));
+        var shippingPrice = Money.ToCents(deliveryMethod.Price);
+
+        var expectedAmount = subtotal + shippingPrice;
 
         if (expectedAmount != paidAmountInCents) return null;
 
@@ -72,7 +75,7 @@ public class OrderService(ICartService cartService, IUnitOfWork unit, IConfigura
             OrderItems = items,
             DeliveryMethod = deliveryMethod,
             ShippingAddress = shippingAddress,
-            Subtotal = items.Sum(x => x.Price * x.Quantity),
+            Subtotal = Money.FromCents(subtotal),
             PaymentSummary = paymentSummary,
             PaymentIntentId = cart.PaymentIntentId,
             BuyerEmail = buyerEmail,

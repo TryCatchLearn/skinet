@@ -19,9 +19,11 @@ export class StripeService {
         loader: () => loadStripe(environment.stripePublicKey)
     });
 
+    private clientSecret = computed(() => this.cartService.cartResource.value()?.clientSecret);
+
     private elementsParams = computed(() => {
         const stripe = this.stripeResource.value();
-        const clientSecret = this.cartService.cartResource.value()?.clientSecret;
+        const clientSecret = this.clientSecret();
         return stripe && clientSecret ? { stripe, clientSecret } : undefined
     });
 

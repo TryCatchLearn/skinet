@@ -1,5 +1,6 @@
 using System;
 using Core.Entities;
+using Core.Extensions;
 using Core.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Stripe;
@@ -17,7 +18,7 @@ public class PaymentService(IConfiguration config, ICartService cartService,
 
         if (cart == null) return null;
 
-        var shippingPrice = 0m;
+        long shippingPrice = 0;
 
         if (cart.DeliveryMethodId.HasValue)
         {
@@ -25,7 +26,7 @@ public class PaymentService(IConfiguration config, ICartService cartService,
 
             if (deliveryMethod == null) return null;
             
-            shippingPrice = deliveryMethod.Price;
+            shippingPrice = Money.ToCents(deliveryMethod.Price);
         }
 
         foreach (var item in cart.Items)
@@ -42,18 +43,18 @@ public class PaymentService(IConfiguration config, ICartService cartService,
 
         var service = new PaymentIntentService();
 
-        PaymentIntent? intent = null;
+        var subtotal = Money.ToCents(cart.Items.Sum(i => i.Quantity * i.Price));
 
         if (string.IsNullOrEmpty(cart.PaymentIntentId))
         {
             var options = new PaymentIntentCreateOptions
             {
-                Amount = (long)cart.Items.Sum(i => i.Quantity * (i.Price * 100)) + (long)shippingPrice * 100,
+                Amount = subtotal + shippingPrice,
                 Currency = "usd",
                 PaymentMethodTypes = ["card"],
                 Metadata = new Dictionary<string, string>{{"cartId", cart.Id}}
             };
-            intent = await service.CreateAsync(options);
+            var intent = await service.CreateAsync(options);
             cart.PaymentIntentId = intent.Id;
             cart.ClientSecret = intent.ClientSecret;
         }
@@ -61,9 +62,9 @@ public class PaymentService(IConfiguration config, ICartService cartService,
         {
             var options = new PaymentIntentUpdateOptions
             {
-                Amount = (long)cart.Items.Sum(i => i.Quantity * (i.Price * 100)) + (long)shippingPrice * 100,
+                Amount = subtotal + shippingPrice,
             };
-            intent = await service.UpdateAsync(cart.PaymentIntentId, options);
+            await service.UpdateAsync(cart.PaymentIntentId, options);
         }
 
         await cartService.SetCartAsync(cart);
