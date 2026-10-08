@@ -1,5 +1,5 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { inject, isDevMode } from '@angular/core';
 import { delay, dematerialize, finalize, materialize } from 'rxjs';
 import { BusyService } from '../services/busy.service';
 
@@ -10,7 +10,7 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     materialize(),
-    delay(500),
+    delay(isDevMode() ? 500 : 0),
     dematerialize(),
     finalize(() => busyService.idle())
   );

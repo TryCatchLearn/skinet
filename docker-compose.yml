@@ -1,14 +1,13 @@
 services:
-  sql:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+  postgres:
+    image: postgres:18
     environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "Password@1"
-    platform: "linux/amd64"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespw
     ports:
-      - "1433:1433"
+      - "5432:5432"
     volumes:
-      - sql-data:/var/opt/mssql
+      - postgres-data:/var/lib/postgresql
   redis:
     image: redis:latest
     ports:
@@ -16,5 +15,5 @@ services:
     volumes:
       - redis-data:/data
 volumes:
-  sql-data:
+  postgres-data:
   redis-data:

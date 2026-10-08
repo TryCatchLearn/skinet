@@ -43,12 +43,12 @@ export class StripeService {
                 defaultValues: {
                     name: user?.firstName + ' ' + user?.lastName,
                     address: {
-                        line1: user?.address.line1,
-                        line2: user?.address.line2,
-                        city: user?.address.city,
-                        state: user?.address.state,
-                        country: user?.address.country ?? 'US',
-                        postal_code: user?.address.postalCode
+                        line1: user?.address?.line1,
+                        line2: user?.address?.line2,
+                        city: user?.address?.city,
+                        state: user?.address?.state,
+                        country: user?.address?.country ?? 'US',
+                        postal_code: user?.address?.postalCode
                     }
                 }
             };

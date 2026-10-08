@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<StoreContext>(opt =>
 {
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
@@ -23,7 +23,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(c =>
 {
     var connString = builder.Configuration.GetConnectionString("Redis") 
         ?? throw new Exception("Cannot get redis connection string");
-    var configuration = ConfigurationOptions.Parse(connString, true);
+    var configuration = ParseRedisConnectionString(connString);
     return ConnectionMultiplexer.Connect(configuration);
 });
 builder.Services.AddSingleton<ICartService, CartService>();
@@ -34,16 +34,24 @@ builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<AppUser>()
     .AddEntityFrameworkStores<StoreContext>();
 
+builder.Services.ConfigureApplicationCookie(o =>
+{
+    o.Cookie.SameSite = SameSiteMode.None;
+    o.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseMiddleware<ExceptionMiddleware>();
 
+var corsOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+
 app.UseCors(x => x
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()
-    .WithOrigins("http://localhost:4200", "https://localhost:4200"));
+    .WithOrigins(corsOrigins));
 
 app.MapControllers();
 app.MapGroup("api").MapIdentityApi<AppUser>();
@@ -63,3 +71,33 @@ catch (Exception e)
 }
 
 app.Run();
+
+static ConfigurationOptions ParseRedisConnectionString(string connString)
+{
+    if (!connString.StartsWith("redis://"))
+    {
+        return ConfigurationOptions.Parse(connString, true);
+    }
+
+    var uri = new Uri(connString);
+    var options = new ConfigurationOptions
+    {
+        EndPoints = {{uri.Host, uri.Port}},
+        AbortOnConnectFail = false
+    };
+
+    if (!string.IsNullOrEmpty(uri.UserInfo))
+    {
+        var parts = uri.UserInfo.Split(':', 2);
+        if (parts.Length == 2)
+        {
+            if (!string.IsNullOrEmpty(parts[0])) options.User = parts[0];
+            options.Password = parts[1];
+        } else if (!string.IsNullOrEmpty(parts[0]))
+        {
+            options.Password = parts[0];
+        }
+    }
+
+    return options;
+}
