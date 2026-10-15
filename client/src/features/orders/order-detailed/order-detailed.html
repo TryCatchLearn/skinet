@@ -81,7 +81,7 @@
         </div>
     </mat-card-content>
     <mat-card-actions class="flex justify-between mx-6">
-        <button routerLink="/orders" mat-flat-button>Back to orders</button>
+        <button (click)="onReturnClick()" mat-flat-button>{{buttonText}}</button>
         <button routerLink="/shop" mat-stroked-button>Continue shopping</button>
     </mat-card-actions>
 </mat-card>

@@ -58,13 +58,28 @@ public class PaymentService(IConfiguration config, ICartService cartService,
         return cart;
     }
 
+    public async Task<string> RefundPayment(string paymentIntentId)
+    {
+        StripeConfiguration.ApiKey = config["StripeSettings:SecretKey"];
+
+        var refundOptions = new RefundCreateOptions
+        {
+            PaymentIntent = paymentIntentId
+        };
+
+        var refundService = new RefundService();
+        var result = await refundService.CreateAsync(refundOptions);
+
+        return result.Status;
+    }
+
     private async Task ValidateCartItemsInCartAsync(ShoppingCart cart)
     {
         foreach (var item in cart.Items)
         {
-            var productItem = await unit.Repository<Core.Entities.Product>().GetByIdAsync(item.ProductId) 
+            var productItem = await unit.Repository<Core.Entities.Product>().GetByIdAsync(item.ProductId)
                 ?? throw new Exception("Unable to validate cart items");
-            
+
             if (item.Price != productItem.Price)
             {
                 item.Price = productItem.Price;

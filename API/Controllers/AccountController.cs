@@ -23,7 +23,7 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
 
         var result = await signInManager.UserManager.CreateAsync(user, registerDto.Password);
 
-        if (!result.Succeeded) 
+        if (!result.Succeeded)
         {
             foreach (var error in result.Errors)
             {
@@ -45,18 +45,19 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
     }
 
     [HttpGet("user-info")]
-    public async Task<ActionResult> GetUserInfo() 
+    public async Task<ActionResult> GetUserInfo()
     {
         if (User.Identity?.IsAuthenticated == false) return NoContent();
 
         var user = await signInManager.UserManager.GetUserByEmailWithAddress(User);
-        
+
         return Ok(new
         {
             user.FirstName,
             user.LastName,
             user.Email,
-            Address = user.Address?.ToDto()
+            Address = user.Address?.ToDto(),
+            Roles = User.FindFirstValue(ClaimTypes.Role)
         });
     }
 

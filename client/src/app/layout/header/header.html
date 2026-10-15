@@ -14,6 +14,7 @@
             <a routerLink="/" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: true}">Home</a>
             <a routerLink="/shop" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: true}">Shop</a>
             <a routerLink="/test-errors" routerLinkActive="text-primary">Errors</a>
+            <a *appIsAdmin routerLink="/admin" routerLinkActive="text-primary">Admin</a>
         </nav>
         <div class="flex gap-3 align-middle">
             <a routerLink="/cart" routerLinkActive="text-primary" matBadge="{{cartService.itemCount()}}"

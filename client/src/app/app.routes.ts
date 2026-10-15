@@ -3,6 +3,7 @@ import { Home } from '../features/home/home';
 import { authGuard } from '../core/guards/auth-guard';
 import { emptyCartGuard } from '../core/guards/empty-cart-guard';
 import { paymentIntentResolver } from '../core/resolvers/payment-intent-resolver';
+import { adminGuard } from '../core/guards/admin-guard';
 
 export const routes: Routes = [
     {path: '', component: Home},
@@ -18,6 +19,8 @@ export const routes: Routes = [
         .then(x => x.Orders), canActivate: [authGuard]},
     {path: 'orders/:id', loadComponent: () => import('../features/orders/order-detailed/order-detailed')
         .then(x => x.OrderDetailed), canActivate: [authGuard]},
+    {path: 'admin', loadComponent: () => import('../features/admin/admin')
+        .then(x => x.Admin), canActivate: [authGuard, adminGuard]},
     {path: 'account/login', loadComponent: () => import('../features/account/login/login')
         .then(x => x.Login)},
     {path: 'account/register', loadComponent: () => import('../features/account/register/register')
