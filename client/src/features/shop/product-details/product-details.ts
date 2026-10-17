@@ -2,7 +2,7 @@ import { Component, computed, inject, input, linkedSignal } from '@angular/core'
 import { environment } from '../../../environments/environment';
 import { httpResource } from '@angular/common/http';
 import { Product } from '../../../core/models/product.model';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { MatAnchor, MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -21,7 +21,8 @@ import { form, min, FormField } from '@angular/forms/signals';
     MatLabel,
     MatInput,
     MatDivider,
-    FormField
+    FormField,
+    NgOptimizedImage
 ],
   selector: 'app-product-details',
   styleUrl: './product-details.css',

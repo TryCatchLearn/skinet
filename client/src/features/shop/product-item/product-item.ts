@@ -1,14 +1,14 @@
 import { Component, inject, input } from '@angular/core';
 import { Product } from '../../../core/models/product.model';
 import { MatCard, MatCardContent, MatCardActions } from '@angular/material/card';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { CartService } from '../../../core/services/cart.service';
 
 @Component({
-  imports: [MatCard, MatCardContent, CurrencyPipe, MatCardActions, MatButton, MatIcon, RouterLink],
+  imports: [MatCard, MatCardContent, CurrencyPipe, MatCardActions, MatButton, MatIcon, RouterLink, NgOptimizedImage],
   selector: 'app-product-item',
   styleUrl: './product-item.css',
   templateUrl: './product-item.html',

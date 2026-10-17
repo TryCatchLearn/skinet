@@ -1,7 +1,15 @@
 @if (product(); as product) {
 <mat-card appearance="raised" routerLink="/shop/{{product.id}}" 
     class="cursor-pointer transition duration-300 ease-in-out hover:-translate-y-1 ">
-    <img [src]="product.pictureUrl" alt="image of {{product.name}}" class="rounded-t-xl">
+    <img 
+        [ngSrc]="product.pictureUrl" 
+        alt="image of {{product.name}}" 
+        class="rounded-t-xl"
+        height="300"
+        width="300"
+        priority
+        placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAgCAAAAACH9iFYAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACK0lEQVRIx4WVwXLaQBBEX68FQgjscuxbqvL/H5MPSTmJUwY72MLazmG1EgKhrIQOiHk7Mz3b6Dv9krqHhIQAARjAxvnhIYaC0RLqw9OVALZkrHxfA/TxOQUByMi2kMHoNIGJDIQkqWORUjDKiXscUUzuPyAALMtGjrpEFOP9YYiXcg02tk2ISryZEroVUgYSLOv1j2MXEqKMRoSJHuR4Sdys62XU5sW2I6CxBBclpM73SazqSs2fw329S9vjNClXSlBOACGFRV0X7dvhEx2q6j12TT4X4UyFHhLq7cofu8YSNG39EWISA80A8uSovN0GOFLX3YvVAz4+I8Q5YqqJ66/x79vdkpB/27aBIsjpYg4AwHt7+C2Oz2kSwLZ9H/rmjVIIEwDv1+nrujqd0POJuw5gH9YA1Wa7ALRkZk0Cmo8NwKfdApttCIw84FTLSQD7cgFufv5qTbkKj1usgeGZDNKp8atrMG2LtQGV6Uina6YEJ7pp32rsSPVYbQOgpbMacz1wd9ve3ZTY5V24LQEoI7aTuV09TFZnHbIOxwUu6qbfx5Y7xMwgWZ1dmN2DfXzKpmoM0SZelFEwIY9i2H+pvo2H/D3Fen6U09uo2Dzd6GTgjD9zCeM6LkrIb18GU+08EUcu+1CM4q3B9q3ee9wjLpU8LyETLFnWoG9PmFOB/rxnSU9VyC38XwY5bZHdxz0kd3HGUAzZuHMBfefdfeYHqfsjToHyGNHFn0L+AXZrXyoLBSlIAAAAAElFTkSuQmCC"
+    >
     <mat-card-content class="mt-2">
         <h6 class="text-sm font-semibold uppercase line-clamp-1">{{product.name}}</h6>
         <p class="font-light">{{product.price | currency}}</p>
